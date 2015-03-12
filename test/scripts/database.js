@@ -4,18 +4,21 @@ var Promise = require('bluebird');
 var sinon = require('sinon');
 var fs = Promise.promisifyAll(require('fs'));
 
-var DB_PATH = path.join(path.dirname(__dirname), 'fixtures', 'db.json');
+var ES_HOST = '127.0.0.1:27184';
+var DB_NAME = 'organized';
 var DB_VERSION = 1;
 
 describe('Database', function(){
+
   var Database = require('../..');
   var Model = require('../../lib/model');
   var Schema = Database.Schema;
-  var db = new Database({path: DB_PATH, version: DB_VERSION});
+  var db = new Database({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
 
   var TestModel = db.model('Test', new Schema({
     _id: {type: String, required: true}
   }));
+
 
   before(function(){
     return TestModel.insert([
@@ -23,6 +26,9 @@ describe('Database', function(){
       {_id: 'B'},
       {_id: 'C'}
     ]);
+  });
+
+  after(function() {
   });
 
   it('model() - get', function(){
@@ -37,72 +43,46 @@ describe('Database', function(){
     Post.destroy();
   });
 
-  it('load()', function(){
-    var db = new Database({path: DB_PATH});
-
-    return db.load().then(function(){
+  it('connect()', function(){
+    return db.connect().then(function(){
       var Test = db.model('Test');
-
-      Test.toArray().should.eql([
-        Test.new({_id: 'A'}),
-        Test.new({_id: 'B'}),
-        Test.new({_id: 'C'})
-      ]);
     });
   });
 
-  it('load() - upgrade', function(){
+  it('connect() - upgrade', function(){
     var onUpgrade = sinon.spy(function(oldVersion, newVersion){
       oldVersion.should.eql(DB_VERSION);
       newVersion.should.eql(2);
     });
 
     var db = new Database({
-      path: DB_PATH,
+      host: ES_HOST,
+      name: DB_NAME,
       version: 2,
       onUpgrade: onUpgrade
     });
 
-    return db.load().then(function(){
+    return db.connect().then(function(){
       onUpgrade.calledOnce.should.be.true;
     });
   });
 
-  it('load() - downgrade', function(){
+  it('connect() - downgrade', function(){
     var onDowngrade = sinon.spy(function(oldVersion, newVersion){
       oldVersion.should.eql(DB_VERSION);
       newVersion.should.eql(0);
     });
 
     var db = new Database({
-      path: DB_PATH,
+      host: ES_HOST,
+      name: DB_NAME,
       version: 0,
       onDowngrade: onDowngrade
     });
 
-    return db.load().then(function(){
+    return db.connect().then(function(){
       onDowngrade.calledOnce.should.be.true;
     });
   });
 
-  it('save()', function(){
-    return db.save().then(function(){
-      return fs.readFileAsync(DB_PATH, 'utf8');
-    }).then(function(data){
-      var json = JSON.parse(data);
-
-      json.meta.should.eql({
-        version: DB_VERSION,
-        warehouse: Database.version
-      });
-
-      json.models.should.eql({
-        Test: [
-          {_id: 'A'},
-          {_id: 'B'},
-          {_id: 'C'}
-        ]
-      });
-    });
-  });
 });
