@@ -41,7 +41,7 @@ A model is corresponding to a document type in ElasticSearch.
 - `get(id)`, find the document with the given id
 - `save(doc_or_docs_array)`, insert a new document to this model
 - `updateById(id, values)`
-- `removeById(id)`, remove all documents in this model
+- `remove(id)`, remove all documents in this model
 - `count(q)`, return the number of documents matching the query
 - `new(data)`, create a new document of this model
 

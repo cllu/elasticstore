@@ -21,14 +21,13 @@ describe('Database', function(){
 
 
   before(function(){
-    return TestModel.insert([
-      {_id: 'A'},
-      {_id: 'B'},
-      {_id: 'C'}
-    ]);
-  });
-
-  after(function() {
+    return db.connect().then(function () {
+      return TestModel.save([
+        {_id: 'A'},
+        {_id: 'B'},
+        {_id: 'C'}
+      ]);
+    })
   });
 
   it('model() - get', function(){
@@ -40,8 +39,8 @@ describe('Database', function(){
     var Post = db.model('Post');
     Post.should.be.an.instanceOf(Model);
     db._models.Post.should.exist;
-    Post.destroy();
   });
+
 
   it('connect()', function(){
     return db.connect().then(function(){
