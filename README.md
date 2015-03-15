@@ -1,19 +1,18 @@
-# Warehouse
-
-[![Build Status](https://travis-ci.org/tommy351/warehouse.svg?branch=master)](https://travis-ci.org/tommy351/warehouse)  [![NPM version](https://badge.fury.io/js/warehouse.svg)](http://badge.fury.io/js/warehouse) [![Coverage Status](https://coveralls.io/repos/tommy351/warehouse/badge.svg?branch=master)](https://coveralls.io/r/tommy351/warehouse?branch=master)
+# ElasticStore
 
 ## Installation
 
 ``` bash
-$ npm install warehouse 
+$ npm install elasticstore
 ```
 
 ## Usage
 
 ``` js
-var Database = require('warehouse');
+var Database = require('elasticstore');
 var db = new Database();
-  
+
+// create a model
 var Post = db.model('posts', {
   title: String,
   created: {type: Date, default: Date.now}
@@ -26,7 +25,25 @@ Post.insert({
 });
 ```
 
-- [API](http://hexo.io/api/warehouse/classes/Database.html)
+## Design
+A datastore is corresponding to an index.
+A model is corresponding to a document type in ElasticSearch.
+
+
+### Datastore methods
+
+- `connect()`, connect to ElasticSearch
+- `model(name, schema)`, create a new model
+
+### Model methods
+
+- `find(q)`, find all matching document. if q is null, return all documents
+- `get(id)`, find the document with the given id
+- `save(doc_or_docs_array)`, insert a new document to this model
+- `updateById(id, values)`
+- `removeById(id)`, remove all documents in this model
+- `count(q)`, return the number of documents matching the query
+- `new(data)`, create a new document of this model
 
 ## Test
 

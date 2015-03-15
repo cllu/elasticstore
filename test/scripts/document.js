@@ -112,34 +112,4 @@ describe('Document', function(){
     doc.toString().should.eql(JSON.stringify(doc));
   });
 
-  it('populate() - object', function(){
-    return User.insert({}).then(function(user){
-      var comment = Comment.new({
-        author: user._id
-      });
-
-      comment.populate('author').author.should.eql(user);
-      return user;
-    }).then(function(user){
-      return User.removeById(user._id);
-    });
-  });
-
-  it('populate() - array', function(){
-    return Comment.insert([
-      {content: 'foo'},
-      {content: 'bar'},
-      {content: 'baz'},
-      {content: 'ha'}
-    ]).then(function(comments){
-      var user = User.new({
-        comments: _.map(comments, '_id')
-      });
-
-      user.populate('comments').comments.toArray().should.eql(comments);
-      return comments;
-    }).map(function(comment){
-      return Comment.removeById(comment._id);
-    });
-  });
 });
