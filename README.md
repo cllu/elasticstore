@@ -45,7 +45,15 @@ A model is corresponding to a document type in ElasticSearch.
 - `count(q)`, return the number of documents matching the query
 - `new(data)`, create a new document of this model
 
+### Document methods
+
+- `save()`
+- `remove()`
+- `update()`
+
 ## Test
+
+ORG_PKG=/Users/cllu/Projects/OrganizedApp/ ./vendor/elasticsearch-1.4.4/bin/elasticsearch -D es.config=/Users/cllu/Projects/OrganizedApp/etc/elasticsearch/elasticsearch.yml
 
 ``` bash
 $ gulp test

@@ -11,27 +11,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/tommy351/warehouse.git"
+    "url": "git://github.com/cllu/elasticstore.git"
   },
   "bugs": {
-    "url": "https://github.com/tommy351/warehouse/issues"
+    "url": "https://github.com/cllu/elasticstore/issues"
   },
   "keywords": [
     "database",
     "json",
     "db"
   ],
-  "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
+  "author": "Chunliang Lyu <hi@chunlianglyu.com>",
   "license": {
     "type": "MIT",
-    "url": "https://raw.github.com/tommy351/warehouse/master/LICENSE"
+    "url": "https://raw.github.com/cllu/elasticstore/master/LICENSE"
   },
   "dependencies": {
-    "JSONStream": "^0.10.0",
     "bluebird": "^2.8.2",
     "cuid": "^1.2.4",
     "elasticsearch": "^3.1.3",
-    "graceful-fs": "^3.0.5",
     "lodash": "^3.0.0"
   },
   "devDependencies": {
