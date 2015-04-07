@@ -1,5 +1,8 @@
 # ElasticStore
 
+ElasticStore provides a high-level MongoDB-like API for ElasticSearch. 
+It aims to be minimal.
+
 ## Installation
 
 ``` bash
@@ -29,7 +32,6 @@ Post.insert({
 A datastore is corresponding to an index.
 A model is corresponding to a document type in ElasticSearch.
 
-
 ### Datastore methods
 
 - `connect()`, connect to ElasticSearch
@@ -58,3 +60,15 @@ ORG_PKG=/Users/cllu/Projects/OrganizedApp/ ./vendor/elasticsearch-1.4.4/bin/elas
 ``` bash
 $ gulp test
 ```
+
+
+## Gothas
+
+### Index refresh
+
+After ElasticSearch indexes a document, it needs some time before the document is searchable.
+To simplify the logic, the `save()` method has a `refresh` optional parameter which is True by default.
+
+## Mapping
+
+Ensure to set `index.mapping.coerce: false` so that ES will not try to coerce numerical values.
