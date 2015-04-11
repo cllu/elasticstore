@@ -2,7 +2,7 @@ var should = require('chai').should();
 var _ = require('lodash');
 var Promise = require('bluebird');
 var sinon = require('sinon');
-var WarehouseError = require('../../lib/error');
+var ElasticstoreError = require('../../lib/error');
 var util = require('util');
 
 var ES_HOST = '127.0.0.1:27184';
@@ -106,7 +106,7 @@ describe('Model', function () {
 
     return User.save(doc).catch(function (err) {
       err.should.be
-        .instanceOf(WarehouseError)
+        .instanceOf(ElasticstoreError)
         .property('message', 'ID is not defined');
     });
   });
@@ -121,7 +121,7 @@ describe('Model', function () {
       return User.remove(user._id);
     }).catch(function (err) {
       err.should.be
-        .instanceOf(WarehouseError)
+        .instanceOf(ElasticstoreError)
         .property('message', 'ID `' + user._id + '` has been used');
     });
   });
@@ -247,7 +247,7 @@ describe('Model', function () {
   it('updateById() - id not set', function () {
     return User.updateById(null, {}).catch(function (err) {
       err.should.be
-        .instanceOf(WarehouseError)
+        .instanceOf(ElasticstoreError)
         .property('message', 'ID is not defined');
     });
   });
@@ -308,7 +308,7 @@ describe('Model', function () {
   it('remove() - id not exist', function () {
     return User.remove('foo').catch(function (err) {
       err.should.be
-        .instanceOf(WarehouseError)
+        .instanceOf(ElasticstoreError)
         .property('message', 'ID `foo` does not exist');
     });
   });
