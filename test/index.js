@@ -8,7 +8,6 @@ describe('Warehouse', function () {
   require('./scripts/database');
   require('./scripts/document');
   require('./scripts/model');
-  require('./scripts/queue');
   require('./scripts/schema');
   require('./scripts/schematype');
   require('./scripts/types/array');
