@@ -56,26 +56,4 @@ describe('SchemaTypeString', function(){
     type.match(undefined, /^f/).should.be.false;
   });
 
-  it('q$in()', function(){
-    type.q$in('foo', ['foo', 'bar', 'baz']).should.be.true;
-    type.q$in('wat', ['foo', 'bar', 'baz']).should.be.false;
-    type.q$in(undefined, ['foo', 'bar', 'baz']).should.be.false;
-    type.q$in('foo', [/^f/, /^g/]).should.be.true;
-    type.q$in('bar', [/^f/, /^g/]).should.be.false;
-  });
-
-  it('q$nin()', function(){
-    type.q$nin('foo', ['foo', 'bar', 'baz']).should.be.false;
-    type.q$nin('wat', ['foo', 'bar', 'baz']).should.be.true;
-    type.q$nin(undefined, ['foo', 'bar', 'baz']).should.be.true;
-    type.q$nin('foo', [/^f/, /^g/]).should.be.false;
-    type.q$nin('bar', [/^f/, /^g/]).should.be.true;
-  });
-
-  it('q$length()', function(){
-    type.q$length('foo', 3).should.be.true;
-    type.q$length('foo', 5).should.be.false;
-    type.q$length(undefined, 3).should.be.false;
-    type.q$length(undefined, 0).should.be.true;
-  });
 });

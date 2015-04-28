@@ -66,31 +66,4 @@ describe('SchemaTypeDate', function(){
     should.not.exist(type.value());
   });
 
-  it('q$day()', function(){
-    type.q$day(new Date(2014, 1, 1), 1).should.be.true;
-    type.q$day(new Date(2014, 1, 1), 5).should.be.false;
-    type.q$day(undefined, 1).should.be.false;
-  });
-
-  it('q$month()', function(){
-    type.q$month(new Date(2014, 1, 1), 1).should.be.true;
-    type.q$month(new Date(2014, 1, 1), 5).should.be.false;
-    type.q$month(undefined, 1).should.be.false;
-  });
-
-  it('q$year()', function(){
-    type.q$year(new Date(2014, 1, 1), 2014).should.be.true;
-    type.q$year(new Date(2014, 1, 1), 1999).should.be.false;
-    type.q$year(undefined, 2014).should.be.false;
-  });
-
-  it('u$inc()', function(){
-    type.u$inc(new Date(1e8), 1).should.eql(new Date(1e8 + 1));
-    should.not.exist(undefined, 1);
-  });
-
-  it('u$dec()', function(){
-    type.u$dec(new Date(1e8), 1).should.eql(new Date(1e8 - 1));
-    should.not.exist(undefined, 1);
-  });
 });
