@@ -28,6 +28,32 @@ Post.insert({
 });
 ```
 
+New design:
+``` js
+var Store = require('elasticstore').Store;
+var store = new Store();
+var Node = store.Node;
+
+// create a new Node type
+function Post() {
+  Node.call(this);
+  
+  this.schema = {
+    title: String,
+    created: {type: Date, default: Date.now}
+  };
+}
+
+Node.registerType(Post);
+
+// create a new instance
+Post.insert({
+  title: 'Hello world'
+}).then(function(post){
+  console.log(post);
+});
+```
+
 ## Design
 A datastore is corresponding to an index.
 A model is corresponding to a document type in ElasticSearch.
@@ -37,7 +63,9 @@ A model is corresponding to a document type in ElasticSearch.
 - `connect()`, connect to ElasticSearch
 - `model(name, schema)`, create a new model
 
-### Model methods
+### Node methods
+
+Access the Node class by `store.Node`.
 
 - `find(q)`, find all matching document. if q is null, return all documents
 - `findById(id)`, (`get` is aliased) find the document with the given id
@@ -46,8 +74,23 @@ A model is corresponding to a document type in ElasticSearch.
 - `removeById(id)`, (`remove` is aliased) remove all documents in this model
 - `count(q)`, return the number of documents matching the query
 - `new(data)`, create a new document of this model
+- `registerType(Type)`, to create a subclass of Node, include a call to `util.inherits(Type, Node)`.
 
-### Document methods
+To create a subclass, use the following snippet:
+
+```js
+function Post() {
+  Node.call(this);
+}
+Node.registerType(Post);
+```
+
+Then you need to access the methods by `Post.findById` etc.
+
+
+### Model instance methods
+
+You can create a new Model instance by `new Model()`.
 
 - `save()`
 - `remove()`

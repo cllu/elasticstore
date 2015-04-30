@@ -2,7 +2,7 @@
   "name": "elasticstore",
   "version": "0.1.0",
   "description": "Simple ElasticSearch-based database",
-  "main": "lib/database",
+  "main": "lib",
   "directories": {
     "lib": "./lib"
   },

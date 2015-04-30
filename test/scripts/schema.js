@@ -1,7 +1,7 @@
 var should = require('chai').should();
 
 describe('Schema', function(){
-  var Database = require('../..');
+  var Database = require('../../lib').Store;
   var Schema = Database.Schema;
 
   it('add()', function(){

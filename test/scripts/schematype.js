@@ -25,12 +25,6 @@ describe('SchemaType', function(){
       .property('message', '`test` is required!');
   });
 
-  it('compare()', function(){
-    type.compare(2, 1).should.eql(1);
-    type.compare(1, 2).should.eql(-1);
-    type.compare(1, 1).should.eql(0);
-  });
-
   it('parse()', function(){
     type.parse(123).should.eql(123);
   });

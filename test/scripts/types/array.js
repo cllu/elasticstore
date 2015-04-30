@@ -58,22 +58,6 @@ describe('SchemaTypeArray', function(){
       .property('message', '`1` is not a string!');
   });
 
-  it('compare()', function(){
-    type.compare([1, 2, 3], [1, 2, 4]).should.eql(-1);
-    type.compare([1, 2, 3], [1, 2, 3]).should.eql(0);
-    type.compare([1, 2, 3], [1, 2, 2]).should.eql(1);
-    type.compare([1, 2, 3, 4], [1, 2, 3]).should.eql(1);
-    type.compare(undefined, []).should.eql(-1);
-    type.compare([]).should.eql(1);
-    type.compare().should.eql(0);
-  });
-
-  it('compare() - child', function(){
-    var type = new SchemaTypeArray('test', {child: new SchemaTypeDate()});
-    type.compare([new Date(1e8), new Date(1e8 + 1)], [new Date(1e8), new Date(1e8 + 2)])
-      .should.eql(-1);
-  });
-
   it('parse()', function(){
     type.parse([1, 2, 3]).should.eql([1, 2, 3]);
     should.not.exist(type.parse());
