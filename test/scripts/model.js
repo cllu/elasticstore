@@ -1,4 +1,5 @@
 var should = require('chai').should();
+var expect = require('chai').expect;
 var _ = require('lodash');
 var Promise = require('bluebird');
 var sinon = require('sinon');
@@ -490,27 +491,51 @@ describe('Node', function () {
   var Store = require('../../lib').Store;
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
   var Node = store.Node;
-  var Relationship = store.Relationship;
+
+  // custom node class
+  function CustomNode(data) {
+    Node.call(this, data);
+  }
+  CustomNode._type = 'custom_node';
+  CustomNode._schema = {
+    title: {required: true},
+    modified: {default: true}
+  };
+  util.inherits(CustomNode, Node);
 
   before(function () {
     return store.connect();
   });
 
   it('basic node operation', function () {
-    console.log(Node);
+    //console.log(Node);
 
     return Node.save({
       _id: 'test',
       title: 'test'
     }).then(function (node) {
-      console.log(node);
+      //console.log(node);
 
       return Node.findById(node._id).then(function (nodeFromDB) {
-        console.log(nodeFromDB);
-        return;
+        expect(nodeFromDB._id).to.equal(node._id);
+        return nodeFromDB.remove();
       })
     });
   });
 
-  it('custom Node class');
+  it('CustomNode check required properties specified in schema', function () {
+    expect(function () {new CustomNode()}).to.throw(ElasticstoreError);
+    expect(function () {new CustomNode({title: 'hello'})}).to.not.throw(Error);
+  });
+
+  it('CustomNode set default properties specified in schema', function () {
+    var node = new CustomNode({title: 'hello'});
+    expect(node.modified).to.equal(true);
+  });
+
+  it('CustomNode _type property', function () {
+    var node = new CustomNode({title: 'hello'});
+    expect(node._type).to.equal('custom_node');
+  });
+
 });
