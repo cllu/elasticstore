@@ -647,7 +647,6 @@ describe('CustomNode', function () {
   var Store = require('../../lib').Store;
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
   var Node = require('../../lib').Node;
-  store.registerType(Node);
 
   // custom node class
   function CustomNode(data) {
@@ -660,18 +659,19 @@ describe('CustomNode', function () {
   };
   util.inherits(CustomNode, Node);
 
+  store.registerType(CustomNode);
+
   before(function () {
     return store.connect();
   });
 
-  it('basic node operation', function () {
-    //console.log(Node);
+  it('CustomNode operations', function () {
 
-    return Node.insert({
+    return CustomNode.insert({
       _id: 'test',
       title: 'test'
     }).then(function (node) {
-      return Node.findById(node._id).then(function (nodeFromDB) {
+      return CustomNode.findById(node._id).then(function (nodeFromDB) {
         expect(nodeFromDB._id).to.equal(node._id);
         return nodeFromDB.remove();
       })
