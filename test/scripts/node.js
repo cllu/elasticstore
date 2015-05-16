@@ -7,8 +7,12 @@ chai.use(sinonChai);
 
 var _ = require('lodash');
 var Promise = require('bluebird');
-var ElasticstoreError = require('../../lib/error');
 var util = require('util');
+
+var elasticstore = require('../../lib');
+var Store = elasticstore.Store;
+var Node = elasticstore.Node;
+var ElasticstoreError = elasticstore.ElasticstoreError;
 
 var ES_HOST = '127.0.0.1:27184';
 var DB_NAME = 'organized-test';
@@ -644,9 +648,8 @@ describe('Node instance', function () {
  * new style interface
  */
 describe('CustomNode', function () {
-  var Store = require('../../lib').Store;
+
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
-  var Node = require('../../lib').Node;
 
   // custom node class
   function CustomNode(data) {
@@ -666,11 +669,11 @@ describe('CustomNode', function () {
   });
 
   it('CustomNode operations', function () {
-
     return CustomNode.insert({
       _id: 'test',
       title: 'test'
     }).then(function (node) {
+      expect(node._type).to.equal('custom_node');
       return CustomNode.findById(node._id).then(function (nodeFromDB) {
         expect(nodeFromDB._id).to.equal(node._id);
         return nodeFromDB.remove();
