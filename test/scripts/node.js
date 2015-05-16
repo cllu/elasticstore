@@ -492,7 +492,8 @@ var DB_VERSION = 1;
 describe('Node', function () {
   var Store = require('../../lib').Store;
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
-  var Node = store.Node;
+  var Node = require('../../lib').Node;
+  store.registerType(Node);
 
   before(function () {
     return store.connect();
@@ -594,7 +595,8 @@ describe('Node', function () {
 describe('Node instance', function () {
   var Store = require('../../lib').Store;
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
-  var Node = store.Node;
+  var Node = require('../../lib').Node;
+  store.registerType(Node);
 
   before(function () {
     return store.connect();
@@ -644,7 +646,8 @@ describe('Node instance', function () {
 describe('CustomNode', function () {
   var Store = require('../../lib').Store;
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
-  var Node = store.Node;
+  var Node = require('../../lib').Node;
+  store.registerType(Node);
 
   // custom node class
   function CustomNode(data) {
