@@ -1,13 +1,17 @@
-var should = require('chai').should();
-var expect = require('chai').expect;
+var chai = require("chai");
+var should = chai.should();
+var expect = chai.expect;
+var sinon = require("sinon");
+var sinonChai = require("sinon-chai");
+chai.use(sinonChai);
+
 var _ = require('lodash');
 var Promise = require('bluebird');
-var sinon = require('sinon');
 var ElasticstoreError = require('../../lib/error');
 var util = require('util');
 
 var ES_HOST = '127.0.0.1:27184';
-var DB_NAME = 'organized';
+var DB_NAME = 'organized-test';
 var DB_VERSION = 1;
 
 //describe.skip('Model', function () {
@@ -484,10 +488,160 @@ var DB_VERSION = 1;
 //
 //});
 
+// Node class methods
+describe('Node', function () {
+  var Store = require('../../lib').Store;
+  var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
+  var Node = store.Node;
+
+  before(function () {
+    return store.connect();
+  });
+
+  after(function () {
+    return store.drop();
+  });
+
+  it('getContext');
+  it('getStore', function () {
+    expect(Node.getStore()).to.be.instanceof(Store);
+  });
+
+  it('getIndex', function() {
+    expect(Node.getIndex()).to.equal(store._index);
+  });
+
+  it('getType', function() {
+    expect(Node.getType()).to.equal('node');
+  });
+
+  it('createInstance', function () {
+    var node = Node.createInstance();
+    expect(node).instanceof(Node);
+  });
+
+  it('insert', function () {
+    return Node.insert({title: 'Node.insert test'}).then(function (node) {
+      expect(node.title).to.equal('Node.insert test');
+    });
+  });
+
+  it('find', function () {
+    return Node.insert({title: 'Node.find test'}).then(function (node) {
+      return Node.find({_id: node._id}).then(function (nodes) {
+        expect(nodes).to.have.length(1);
+        expect(nodes[0]._id).to.equal(node._id);
+      });
+    });
+  });
+  it('findOne', function () {
+    return Node.insert({title: 'Node.findOne test'}).then(function (node) {
+      return Node.findOne({_id: node._id}).then(function (n) {
+        expect(n._id).to.equal(node._id);
+      });
+    });
+  });
+  it('findById', function () {
+    return Node.insert({title: 'Node.findById test'}).then(function (node) {
+      return Node.findById(node._id).then(function (n) {
+        expect(n._id).to.equal(node._id);
+      });
+    });
+  });
+  it('updateById', function () {
+    return Node.insert({title: 'Node.updateById test'}).then(function (node) {
+      return Node.updateById(node._id, {title: 'Node.updateById test update'});
+    }).then(function (updatedNode) {
+      expect(updatedNode.title).to.equal('Node.updateById test update');
+    });
+  });
+  it('removeById', function () {
+    return Node.insert({title: 'Node.removeById test'}).then(function (node) {
+      return Node.removeById(node._id);
+    }).then(function (removedNode) {
+      return Node.findById(removedNode._id).then(function (n) {
+        return expect(n).to.not.ok;
+      });
+    });
+  });
+  it('findAndRemove', function () {
+    return Node.insert({title: 'Node.findAndRemove test'}).then(function (node) {
+      return Node.findAndRemove({_id: node._id}).thenReturn(node);
+    }).then(function (node) {
+      return Node.findById(node._id).then(function (n) {
+        return expect(n).to.not.ok;
+      });
+    });
+  });
+
+  it('addHook', function () {
+    Node.addHook('beforeSave', function () {
+      console.log('hook');
+    });
+    expect(Node._hooks['beforeSave']).to.have.length(1);
+  });
+  it('executeHooks', function () {
+    var hookFn = sinon.spy();
+    var node = {title: 'Node.executeHooks test'};
+    Node.addHook('beforeSave', hookFn);
+    return Node.executeHooks('beforeSave', node).then(function () {
+      expect(hookFn).to.have.been.calledWith(node);
+    });
+  });
+});
+
+// Node instance methods
+describe('Node instance', function () {
+  var Store = require('../../lib').Store;
+  var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
+  var Node = store.Node;
+
+  before(function () {
+    return store.connect();
+  });
+
+  after(function () {
+    return store.drop();
+  });
+
+  it('save', function () {
+    var node = new Node({title: 'node.save test'});
+    return node.save().then(function (n) {
+      return Node.findById(n._id);
+    }).then(function (node) {
+      expect(node.title).to.equal('node.save test');
+    });
+  });
+  it('update', function () {
+    var node = new Node({title: 'node.update test'});
+    return node.save().then(function (n) {
+      return Node.findById(n._id);
+    }).then(function (node) {
+      expect(node.title).to.equal('node.update test');
+      return node;
+    }).then(function (node) {
+      return node.update({title: 'node.update test update'})
+    }).then(function (node) {
+      expect(node.title).to.equal('node.update test update');
+    });
+  });
+  it('remove', function () {
+    var node = new Node({title: 'node.remove test'});
+
+    return node.save().then(function (node) {
+      return node.remove();
+    }).then(function (removedNode) {
+      return Node.findById(removedNode._id).then(function (n) {
+        return expect(n).to.not.ok;
+      });
+    });
+  });
+});
+
 /**
  * new style interface
  */
-describe('Node', function () {
+describe('CustomNode', function () {
   var Store = require('../../lib').Store;
   var store = new Store({host: ES_HOST, name: DB_NAME, version: DB_VERSION});
   var Node = store.Node;
@@ -510,12 +664,10 @@ describe('Node', function () {
   it('basic node operation', function () {
     //console.log(Node);
 
-    return Node.save({
+    return Node.insert({
       _id: 'test',
       title: 'test'
     }).then(function (node) {
-      //console.log(node);
-
       return Node.findById(node._id).then(function (nodeFromDB) {
         expect(nodeFromDB._id).to.equal(node._id);
         return nodeFromDB.remove();

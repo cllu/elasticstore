@@ -3,7 +3,7 @@ var Promise = require('bluebird');
 var sinon = require('sinon');
 
 var ES_HOST = '127.0.0.1:27184';
-var DB_NAME = 'organized';
+var DB_NAME = 'organized-test';
 var DB_VERSION = 1;
 
 describe('Database', function(){

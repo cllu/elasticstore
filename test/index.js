@@ -1,13 +1,12 @@
 exports.config = {
   ES_HOST: '127.0.0.1:27184',
-  DB_NAME: 'organized',
+  DB_NAME: 'organized-test',
   DB_VERSION: 1
 };
 
 describe('Warehouse', function () {
   require('./scripts/database');
-  require('./scripts/model');
-  require('./scripts/schema');
+  require('./scripts/node');
   require('./scripts/schematype');
   require('./scripts/types/array');
   require('./scripts/types/boolean');

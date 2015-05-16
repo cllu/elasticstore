@@ -62,6 +62,7 @@ A model is corresponding to a document type in ElasticSearch.
 
 - `connect()`, connect to ElasticSearch
 - `model(name, schema)`, create a new model
+- `registerType(Type)`, to create a subclass of Node, include a call to `util.inherits(Type, Node)`.
 
 ### Node methods
 
@@ -73,8 +74,7 @@ Access the Node class by `store.Node`.
 - `updateById(id, values)`
 - `removeById(id)`, (`remove` is aliased) remove all documents in this model
 - `count(q)`, return the number of documents matching the query
-- `new(data)`, create a new document of this model
-- `registerType(Type)`, to create a subclass of Node, include a call to `util.inherits(Type, Node)`.
+- `createInstance(data)`, create a new document of this model
 
 To create a subclass, use the following snippet:
 
@@ -92,6 +92,7 @@ Then you need to access the methods by `Post.findById` etc.
 
 You can create a new Model instance by `new Model()`.
 
+- `getContext()`
 - `save()`
 - `remove()`
 - `update()`
