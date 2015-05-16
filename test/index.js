@@ -17,6 +17,4 @@ describe('Warehouse', function () {
   require('./scripts/types/number');
   require('./scripts/types/object');
   require('./scripts/types/string');
-  require('./scripts/types/virtual');
-  require('./scripts/util');
 });
