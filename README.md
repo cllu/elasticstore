@@ -68,6 +68,12 @@ A model is corresponding to a document type in ElasticSearch.
 
 Access the Node class by `store.Node`.
 
+- `getContext`
+- `getStore`
+- `getStoreClient`
+- `getIndex`
+- `getType`
+
 - `find(q)`, find all matching document. if q is null, return all documents
 - `findById(id)`, (`get` is aliased) find the document with the given id
 - `save(doc_or_docs_array)`, insert a new document to this model
