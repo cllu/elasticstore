@@ -12,7 +12,6 @@ var moment = require('moment');
 
 var elasticstore = require('../../lib');
 var Store = elasticstore.Store;
-var Node = elasticstore.Node;
 var ElasticstoreError = elasticstore.ElasticstoreError;
 
 var ES_HOST = '127.0.0.1:27184';
@@ -499,7 +498,7 @@ describe('Node', function () {
     contextVar: '',
     contextFn: sinon.spy()
   };
-  store.registerType(Node, context);
+  var Node = store.registerType(elasticstore.Node, context);
 
   before(function () {
     return store.connect();
@@ -645,23 +644,26 @@ describe('Node', function () {
     });
   });
 
+
+
   /**
    * new style interface
    */
   describe('CustomNode', function () {
+
     // custom node class
-    function CustomNode(data) {
-      Node.call(this, data);
+    function MyCustomNode(data) {
+      elasticstore.Node.call(this, data);
     }
-    CustomNode._type = 'custom_node';
-    CustomNode._schema = {
+    MyCustomNode._type = 'custom_node';
+    MyCustomNode._schema = {
       title: {required: true},
       modified: {default: true},
       created_at: {type: elasticstore.Type.Moment}
     };
-    util.inherits(CustomNode, Node);
+    util.inherits(MyCustomNode, elasticstore.Node);
 
-    store.registerType(CustomNode);
+    var CustomNode = store.registerType(MyCustomNode);
 
     it('CustomNode operations', function () {
       return CustomNode.insert({
@@ -691,7 +693,7 @@ describe('Node', function () {
       expect(node._type).to.equal('custom_node');
     });
 
-    it.only('parses Moment value', function () {
+    it('parses Moment value', function () {
       var node = new CustomNode({title: 'CustomNode Moment test', created_at: '2015-05-16T22:50:05.537Z'});
       expect(moment.isMoment(node.created_at)).to.be.true;
     })
