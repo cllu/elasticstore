@@ -11,45 +11,28 @@ $ npm install elasticstore
 
 ## Usage
 
+
 ``` js
-var Database = require('elasticstore');
-var db = new Database();
+var elasticstore = require('elasticstore');
+var store = new elasticstore.Store();
 
-// create a model
-var Post = db.model('posts', {
-  title: String,
-  created: {type: Date, default: Date.now}
-});
-
-Post.insert({
-  title: 'Hello world'
-}).then(function(post){
-  console.log(post);
-});
-```
-
-New design:
-``` js
-var Store = require('elasticstore').Store;
-var store = new Store();
-var Node = store.Node;
-
-// create a new Node type
-function Post() {
-  Node.call(this);
-  
-  this.schema = {
-    title: String,
-    created: {type: Date, default: Date.now}
-  };
+function Post(data) {
+  elasticstore.Node.call(this, data);
 }
 
-Node.registerType(Post);
+Post._type = 'post';
+Post._schema = {
+  title: String,
+  created: {type: Date, default: Date.now}
+};
 
-// create a new instance
+require('util').inherits(Post, Node);
+
+store.registerType(Post);
+
 Post.insert({
   title: 'Hello world'
-}).then(function(post){
+}).then(function(post) {
   console.log(post);
 });
 ```
