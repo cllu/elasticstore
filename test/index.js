@@ -1,5 +1,5 @@
 describe('Warehouse', function () {
-  require('./scripts/database');
+  require('./scripts/store');
   require('./scripts/node');
   require('./scripts/schematype');
   require('./scripts/types/array');

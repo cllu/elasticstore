@@ -55,10 +55,10 @@ Post.insert({
 ```
 
 ## Design
-A datastore is corresponding to an index.
+A store is corresponding to an index.
 A model is corresponding to a document type in ElasticSearch.
 
-### Datastore methods
+### Store methods
 
 - `connect()`, connect to ElasticSearch
 - `model(name, schema)`, create a new model

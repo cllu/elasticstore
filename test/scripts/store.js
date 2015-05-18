@@ -6,11 +6,10 @@ var _ = require('lodash');
 
 var config = require('../config');
 
-describe('Database', function(){
+describe('Store', function(){
 
-  var Database = require('../../lib/index').Store;
-  var Schema = Database.Schema;
-  var db = new Database(config);
+  var Store = require('../../lib/index').Store;
+  var db = new Store(config);
 
   it('connect()', function(){
     return db.connect();
@@ -22,7 +21,7 @@ describe('Database', function(){
       newVersion.should.eql(2);
     });
 
-    var db = new Database(_.merge(_.clone(config), {version: 2, onUpgrade: onUpgrade}));
+    var db = new Store(_.merge(_.clone(config), {version: 2, onUpgrade: onUpgrade}));
 
     return db.connect().then(function(){
       onUpgrade.calledOnce.should.be.true;
@@ -35,7 +34,7 @@ describe('Database', function(){
       newVersion.should.eql(0);
     });
 
-    var db = new Database(_.merge(_.clone(config), {version: 0, onDowngrade: onDowngrade}));
+    var db = new Store(_.merge(_.clone(config), {version: 0, onDowngrade: onDowngrade}));
 
     return db.connect().then(function(){
       onDowngrade.calledOnce.should.be.true;
